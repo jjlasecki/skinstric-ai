@@ -1,6 +1,6 @@
 export default function Header({ location = "INTRO" }) {
   return (
-    <header className="flex h-16 w-full items-center justify-between px-8">
+    <header className="relative z-10 flex h-16 w-full items-center justify-between px-8">
       <div className="flex items-center gap-4 text-[#1A1B1C]">
         <span className="text-[14px] font-semibold leading-4 tracking-[-0.02em] uppercase">
           SKINSTRIC
