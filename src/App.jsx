@@ -1,14 +1,22 @@
 import { useState } from "react";
 import Header from "./components/Header.jsx";
+import IntroduceYourself from "./components/IntroduceYourself.jsx";
 import NavigationButton from "./components/NavigationButton.jsx";
 
 function App() {
+  const [isIntroduceYourselfOpen, setIsIntroduceYourselfOpen] = useState(false);
   const [isTakeTestHovered, setIsTakeTestHovered] = useState(false);
   const [isTakeTestFocused, setIsTakeTestFocused] = useState(false);
   const [isDiscoverHovered, setIsDiscoverHovered] = useState(false);
   const [isDiscoverFocused, setIsDiscoverFocused] = useState(false);
   const isTakeTestActive = isTakeTestHovered || isTakeTestFocused;
   const isDiscoverActive = isDiscoverHovered || isDiscoverFocused;
+
+  if (isIntroduceYourselfOpen) {
+    return (
+      <IntroduceYourself onBack={() => setIsIntroduceYourselfOpen(false)} />
+    );
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#FCFCFC]">
@@ -58,7 +66,11 @@ function App() {
           isTakeTestActive ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
         onMouseEnter={() => {
-          if (window.matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)").matches) {
+          if (
+            window.matchMedia(
+              "(min-width: 1024px) and (hover: hover) and (pointer: fine)",
+            ).matches
+          ) {
             setIsDiscoverHovered(true);
             setIsTakeTestHovered(false);
             setIsTakeTestFocused(false);
@@ -88,7 +100,11 @@ function App() {
           isDiscoverActive ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
         onMouseEnter={() => {
-          if (window.matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)").matches) {
+          if (
+            window.matchMedia(
+              "(min-width: 1024px) and (hover: hover) and (pointer: fine)",
+            ).matches
+          ) {
             setIsTakeTestHovered(true);
             setIsDiscoverHovered(false);
             setIsDiscoverFocused(false);
@@ -100,7 +116,11 @@ function App() {
           label="Take Test"
           direction="right"
           expanded={isTakeTestActive}
-          onClick={() => {}}
+          onClick={() => {
+            setIsTakeTestHovered(false);
+            setIsTakeTestFocused(false);
+            setIsIntroduceYourselfOpen(true);
+          }}
           onFocus={(event) => {
             if (event.currentTarget.matches(":focus-visible")) {
               setIsTakeTestFocused(true);
@@ -114,7 +134,7 @@ function App() {
 
       <main className="absolute inset-0 flex items-center justify-center px-4">
         <h1
-          className={`absolute left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-170 -translate-y-1/2 text-[clamp(40px,6.6667vw,128px)] font-light leading-[0.9375] tracking-[-0.07em] text-[#1A1B1C] transition-[translate] duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:transition-none ${
+          className={`absolute left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-170 -translate-y-1/2 text-[clamp(40px,6.6667vw,128px)] font-light leading-[0.9375] tracking-[-0.07em] text-[#1A1B1C] transition-[translate] duration-1200 ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:transition-none ${
             isTakeTestActive
               ? "translate-x-[calc(2rem-50vw)] text-left"
               : isDiscoverActive
@@ -126,11 +146,12 @@ function App() {
           <span className="block">skincare</span>
         </h1>
         <p className="absolute bottom-6.5 left-8 w-full max-w-79 text-left text-[14px] font-normal leading-6 tracking-normal text-[#1A1B1C] uppercase">
-          Skinstric developed an A.I. that creates a highly-personalised routine tailored to what your skin needs.
+          Skinstric developed an A.I. that creates a highly-personalised routine
+          tailored to what your skin needs.
         </p>
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

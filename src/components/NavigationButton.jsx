@@ -12,7 +12,7 @@ export default function NavigationButton({
     <span
       aria-hidden="true"
       className={`relative flex shrink-0 items-center justify-center transition-[height,width] duration-400 ease-in-out motion-reduce:transition-none ${
-        expanded ? "h-[78px] w-[78px]" : "h-11 w-11"
+        expanded ? "h-19.5 w-19.5" : "h-11 w-11"
       }`}
     >
       <span
@@ -46,7 +46,7 @@ export default function NavigationButton({
       onFocus={onFocus}
       onBlur={onBlur}
       className={`flex items-center bg-transparent text-[14px] font-semibold leading-4 uppercase tracking-[-0.02em] transition-[gap,height,color] duration-400 ease-in-out motion-reduce:transition-none ${
-        expanded ? "h-[78px] gap-6 text-[#1A1B1C]" : "h-11 gap-4 text-[#1A1B1C]/70"
+        expanded ? "h-19.5 gap-6 text-[#1A1B1C]" : "h-11 gap-4 text-[#1A1B1C]/70"
       }`}
     >
       {isLeft && icon}
