@@ -9,10 +9,16 @@ const normalizeValidEntry = (value) => {
   return isValid ? normalizedValue : null;
 };
 
-export default function IntroduceYourself({ onBack }) {
-  const [name, setName] = useState("");
-  const [city, setCity] = useState("");
-  const [step, setStep] = useState("name");
+export default function IntroduceYourself({
+  onBack,
+  onProceed,
+  name,
+  setName,
+  city,
+  setCity,
+  step,
+  setStep,
+}) {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submissionPendingRef = useRef(false);
@@ -98,6 +104,7 @@ export default function IntroduceYourself({ onBack }) {
 
       const data = await response.json();
       console.log("Skinstric API response:", data);
+      onProceed();
     } catch (error) {
       setErrorMessage(
         error instanceof Error

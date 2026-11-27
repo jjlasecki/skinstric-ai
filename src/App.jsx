@@ -1,10 +1,14 @@
 import { useState } from "react";
 import Header from "./components/Header.jsx";
 import IntroduceYourself from "./components/IntroduceYourself.jsx";
+import ImageSelection from "./components/ImageSelection.jsx";
 import NavigationButton from "./components/NavigationButton.jsx";
 
 function App() {
-  const [isIntroduceYourselfOpen, setIsIntroduceYourselfOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState("landing");
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
+  const [introductionStep, setIntroductionStep] = useState("name");
   const [isTakeTestHovered, setIsTakeTestHovered] = useState(false);
   const [isTakeTestFocused, setIsTakeTestFocused] = useState(false);
   const [isDiscoverHovered, setIsDiscoverHovered] = useState(false);
@@ -12,9 +16,24 @@ function App() {
   const isTakeTestActive = isTakeTestHovered || isTakeTestFocused;
   const isDiscoverActive = isDiscoverHovered || isDiscoverFocused;
 
-  if (isIntroduceYourselfOpen) {
+  if (currentPage === "introduction") {
     return (
-      <IntroduceYourself onBack={() => setIsIntroduceYourselfOpen(false)} />
+      <IntroduceYourself
+        onBack={() => setCurrentPage("landing")}
+        onProceed={() => setCurrentPage("imageSelection")}
+        name={name}
+        setName={setName}
+        city={city}
+        setCity={setCity}
+        step={introductionStep}
+        setStep={setIntroductionStep}
+      />
+    );
+  }
+
+  if (currentPage === "imageSelection") {
+    return (
+      <ImageSelection onBack={() => setCurrentPage("introduction")} />
     );
   }
 
@@ -119,7 +138,7 @@ function App() {
           onClick={() => {
             setIsTakeTestHovered(false);
             setIsTakeTestFocused(false);
-            setIsIntroduceYourselfOpen(true);
+            setCurrentPage("introduction");
           }}
           onFocus={(event) => {
             if (event.currentTarget.matches(":focus-visible")) {
