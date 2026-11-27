@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Header from "./Header.jsx";
 import NavigationButton from "./NavigationButton.jsx";
 
@@ -14,6 +14,8 @@ export default function IntroduceYourself({ onBack }) {
   const [city, setCity] = useState("");
   const [step, setStep] = useState("name");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submissionPendingRef = useRef(false);
 
   const isNameStep = step === "name";
   const isCityStep = step === "city";
@@ -49,6 +51,63 @@ export default function IntroduceYourself({ onBack }) {
     setCity(validCity);
     setErrorMessage("");
     setStep("complete");
+  };
+
+  const handleProceed = async () => {
+    if (submissionPendingRef.current) return;
+
+    const validName = normalizeValidEntry(name);
+    const validCity = normalizeValidEntry(city);
+
+    if (!validName) {
+      setErrorMessage("Please enter a valid name without numbers or special characters");
+      setStep("name");
+      return;
+    }
+
+    if (!validCity) {
+      setErrorMessage("Please enter a valid city without numbers or special characters");
+      setStep("city");
+      return;
+    }
+
+    setName(validName);
+    setCity(validCity);
+    setErrorMessage("");
+    submissionPendingRef.current = true;
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(
+        "https://us-central1-api-skinstric-ai.cloudfunctions.net/skinstricPhaseOne",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: validName,
+            location: validCity,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Submission failed (${response.status} ${response.statusText})`);
+      }
+
+      const data = await response.json();
+      console.log("Skinstric API response:", data);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? `Unable to submit. ${error.message}. Please try again.`
+          : "Unable to submit. Please try again.",
+      );
+    } finally {
+      submissionPendingRef.current = false;
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -142,11 +201,14 @@ export default function IntroduceYourself({ onBack }) {
         />
       </div>
       {step === "complete" && (
-        <div className="absolute bottom-9 right-8 z-20">
+        <div
+          className="absolute bottom-9 right-8 z-20"
+          aria-busy={isSubmitting}
+        >
           <NavigationButton
             label="Proceed"
             direction="right"
-            onClick={() => {}}
+            onClick={handleProceed}
           />
         </div>
       )}
